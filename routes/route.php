@@ -17,8 +17,22 @@ return;
 
     if(count($routesArray) == 1 && isset($_SERVER["REQUEST_METHOD"])
     && $_SERVER["REQUEST_METHOD"] == "GET"){
+
+          /* Peticion GET con filtro */
+          
+
+       if(isset($_GET["linkTo"]) && isset($_GET["equalTo"])){
+
+        $response = new GetController();
+        $response -> getFilterData(explode("?", $routesArray[1])[0], $_GET["linkTo"], $_GET["equalTo"]);
+       }else{
+            /* Peticion GET sin filtro */
      $response = new GetController();
      $response -> getData($routesArray[1]);
+       }   
+
+
+      
 
     }
 
