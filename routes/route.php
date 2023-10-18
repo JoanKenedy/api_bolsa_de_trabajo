@@ -25,7 +25,10 @@ return;
 
         $response = new GetController();
         $response -> getFilterData(explode("?", $routesArray[1])[0], $_GET["linkTo"], $_GET["equalTo"]);
+
+
       /* Peticion GET entre tablas relacionadas sin filtro */
+      
       }else if(isset($_GET["rel"]) && isset($_GET["type"]) && explode("?", $routesArray[1])[0] == "relations"){
               
              $response = new GetController();
