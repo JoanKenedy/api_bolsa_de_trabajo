@@ -33,6 +33,15 @@ public function getRelFilterData($rel, $type, $linkTo, $equalTo){
     $return = new GetController();
         $return -> fncResponse($response, "getRelFilterData");
 }
+/* Peticiones GET para el buscador */
+
+public function getSearchData($table, $linkTo, $search){
+
+    $response = GetModel::getSearchData($table, $linkTo, $search);
+     $return = new GetController();
+        $return -> fncResponse($response, "getSearchData");
+
+}  
 /*Respuestas del controlador */
 
 public function fncResponse ($response, $method){

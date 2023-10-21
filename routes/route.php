@@ -42,6 +42,11 @@ return;
                 $response -> getRelFilterData($_GET["rel"], $_GET["type"], $_GET["linkTo"], $_GET["equalTo"]);
 
 
+       }else if(isset($_GET["linkTo"]) && isset($_GET["search"])){
+        /* Peticion GET para el buscador */
+         $response = new GetController();
+         $response -> getSearchData(explode("?", $routesArray[1])[0],$_GET["linkTo"], $_GET["search"]);
+
        }else{
             /* Peticion GET sin filtro */
      $response = new GetController();
