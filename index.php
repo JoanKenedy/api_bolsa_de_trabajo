@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 header('Access-Control-Allow-Origin: *');
 header("Access-Controll-Allow-Headers: Origin, X-Requested-Width, Content-Type, Accept");
@@ -11,8 +11,8 @@ require_once "controllers/get.controller.php";
 require_once  "models/get.model.php";
 require_once "controllers/post.controller.php";
 require_once  "models/post.model.php";
+require_once "controllers/put.controller.php";
+require_once  "models/put.model.php";
 
 $index = new RoutesController();
-$index -> index();
-
-?>
+$index->index();

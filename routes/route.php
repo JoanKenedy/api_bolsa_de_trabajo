@@ -160,45 +160,43 @@ if (count($routesArray) == 0) {
     $database = RoutesController::database();
     $response = PostController::getColumnsData(explode("?", $routesArray[1])[0], $database);
 
-    foreach($response as $key => $value){
+    foreach ($response as $key => $value) {
       array_push($columns, $value->item);
     }
     /*Quitamos el primer y ultimo indice del array */
     array_shift($columns);
     array_pop($columns);
 
-     /* Recibimos los valores Post */
-     if(isset($_POST)){
+    /* Recibimos los valores Post */
+    if (isset($_POST)) {
       /* Validamos que las variables POST coincidan con los nombres  de la columnas de la  base de datos */
       $count = 0;
 
-      foreach($columns as $key => $value){
-             if(array_keys($_POST)[$key] == $value){
-                 $count++;
-             }else{
-                $json = array (
-                    "status" => 400,
-                    "result" => "No coinciden las columnas con las de la base de datos"
-                );
+      foreach ($columns as $key => $value) {
+        if (array_keys($_POST)[$key] == $value) {
+          $count++;
+        } else {
+          $json = array(
+            "status" => 400,
+            "result" => "No coinciden las columnas con las de la base de datos"
+          );
 
-                echo json_encode($json, http_response_code($json["status"]));
-                return;
-             }
+          echo json_encode($json, http_response_code($json["status"]));
+          return;
+        }
       }
 
-    /* Validamos que las variables POST coincidan con la misma cantidad  de la columnas de la  base de datos */
-       if($count == count($columns)){
-           echo "Coincide";
-          
+      /* Validamos que las variables POST coincidan con la misma cantidad  de la columnas de la  base de datos */
+      if ($count == count($columns)) {
+        echo "Coincide";
 
 
-            /* Solicitamos respuesta del controlador pra crear datos en cualquier tabla */
-         $response = new PostController();
-         $response -> postData(explode("?", $routesArray[1])[0], $_POST);
-       }
 
-   
-     }
+        /* Solicitamos respuesta del controlador pra crear datos en cualquier tabla */
+        $response = new PostController();
+        $response->postData(explode("?", $routesArray[1])[0], $_POST);
+      }
+    }
   }
 
   /* PETICIONES PUT */
@@ -207,13 +205,38 @@ if (count($routesArray) == 0) {
     count($routesArray) == 1 && isset($_SERVER["REQUEST_METHOD"])
     && $_SERVER["REQUEST_METHOD"] == "PUT"
   ) {
-    $json = array(
-      'status' => 200,
-      'result' => "PUT"
-    );
+    /* Preguntamos si viene el  id */
+    if (isset($_GET["id"]) && isset($_GET["nameId"])) {
+      /* Validamos que exista el id */
+      $table = explode("?", $routesArray[1])[0];
+      $linkTo = $_GET["nameId"];
+      $equalTo = $_GET["id"];
+      $orderBy = null;
+      $orderMode = null;
+      $startAt = null;
+      $endAt = null;
 
-    echo json_encode($json, http_response_code($json['status']));
-    return;
+      $response = PutController::getFilterData($table, $linkTo, $equalTo, $orderBy, $orderMode, $startAt, $endAt);
+
+      if ($response) {
+
+
+        $data = array();
+        parse_str(file_get_contents('php://input'), $data);
+
+        $response = new PutController();
+        $response->putData(explode("?", $routesArray[1])[0], $data, $_GET["id"], $_GET["nameId"]);
+      } else {
+
+        $json = array(
+          'status' => 400,
+          'result' => "El id no se encontro en la base de datos"
+        );
+
+        echo json_encode($json, http_response_code($json['status']));
+        return;
+      }
+    }
   }
 
   /* PETICIONES DELETE */
