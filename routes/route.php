@@ -154,13 +154,51 @@ if (count($routesArray) == 0) {
     count($routesArray) == 1 && isset($_SERVER["REQUEST_METHOD"])
     && $_SERVER["REQUEST_METHOD"] == "POST"
   ) {
-    $json = array(
-      'status' => 200,
-      'result' => "POST"
-    );
 
-    echo json_encode($json, http_response_code($json['status']));
-    return;
+    $columns = array();
+    /* Traemos el listado de columnas de la tabla a cambiar */
+    $database = RoutesController::database();
+    $response = PostController::getColumnsData(explode("?", $routesArray[1])[0], $database);
+
+    foreach($response as $key => $value){
+      array_push($columns, $value->item);
+    }
+    /*Quitamos el primer y ultimo indice del array */
+    array_shift($columns);
+    array_pop($columns);
+
+     /* Recibimos los valores Post */
+     if(isset($_POST)){
+      /* Validamos que las variables POST coincidan con los nombres  de la columnas de la  base de datos */
+      $count = 0;
+
+      foreach($columns as $key => $value){
+             if(array_keys($_POST)[$key] == $value){
+                 $count++;
+             }else{
+                $json = array (
+                    "status" => 400,
+                    "result" => "No coinciden las columnas con las de la base de datos"
+                );
+
+                echo json_encode($json, http_response_code($json["status"]));
+                return;
+             }
+      }
+
+    /* Validamos que las variables POST coincidan con la misma cantidad  de la columnas de la  base de datos */
+       if($count == count($columns)){
+           echo "Coincide";
+          
+
+
+            /* Solicitamos respuesta del controlador pra crear datos en cualquier tabla */
+         $response = new PostController();
+         $response -> postData(explode("?", $routesArray[1])[0], $_POST);
+       }
+
+   
+     }
   }
 
   /* PETICIONES PUT */
