@@ -245,12 +245,34 @@ if (count($routesArray) == 0) {
     count($routesArray) == 1 && isset($_SERVER["REQUEST_METHOD"])
     && $_SERVER["REQUEST_METHOD"] == "DELETE"
   ) {
-    $json = array(
-      'status' => 200,
-      'result' => "DELETE"
-    );
 
-    echo json_encode($json, http_response_code($json['status']));
-    return;
+
+    if (isset($_GET["id"]) && isset($_GET["nameId"])) {
+
+      /* Validamos que exista el id */
+      $table = explode("?", $routesArray[1])[0];
+      $linkTo = $_GET["nameId"];
+      $equalTo = $_GET["id"];
+      $orderBy = null;
+      $orderMode = null;
+      $startAt = null;
+      $endAt = null;
+
+      $response = PutController::getFilterData($table, $linkTo, $equalTo, $orderBy, $orderMode, $startAt, $endAt);
+
+      if ($response) {
+
+        $response = new DeleteController();
+        $response->deleteData(explode("?", $routesArray[1])[0], $data, $_GET["id"], $_GET["nameId"]);
+      } else {
+        $json = array(
+          'status' => 400,
+          'result' => "El id no se encontro en la base de datos"
+        );
+
+        echo json_encode($json, http_response_code($json['status']));
+        return;
+      }
+    }
   }
 }

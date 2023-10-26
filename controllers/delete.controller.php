@@ -1,24 +1,16 @@
 <?php
-class PostController
+
+class DeleteController
 {
 
-    static public function getColumnsData($table, $database)
+    public function deleteData($table, $id, $nameId)
     {
-        $response = PostModel::getColumsData($table, $database);
-        return $response;
+        $response = DeleteModel::deleteData($table, $id, $nameId);
+        $return = new DeleteController();
+        $return->fncResponse($response, 'deleteData');
     }
 
-    static public function postData($table, $data)
-    {
-
-        $response = PostModel::postData($table, $data);
-        $return = new PostController();
-        $return->fncResponse($response, "postData");
-    }
-
-
-
-    /*Respuestas del controlador */
+    /* Respuestas de controlador */
 
     public function fncResponse($response, $method)
     {

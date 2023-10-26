@@ -13,6 +13,8 @@ require_once "controllers/post.controller.php";
 require_once  "models/post.model.php";
 require_once "controllers/put.controller.php";
 require_once  "models/put.model.php";
+require_once "controllers/delete.controller.php";
+require_once  "models/delete.model.php";
 
 $index = new RoutesController();
 $index->index();
