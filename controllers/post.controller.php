@@ -34,11 +34,16 @@ class PostController
        
        if(!empty($response)){
           $crypt = crypt($data["password"], '$2a$07$azybxcags23425sdg23sdfhsd$'); 
-                  $data["password"] = $crypt;
-         echo '<pre>'; print_r($response); echo '</pre>';
-          echo '<pre>'; print_r($data); echo '</pre>';
+          $pass1 = $response[0]->password;
+          $limite = strlen($pass1);
+          $pass2 = substr($crypt,0,$limite);
+
+          echo '<pre>'; print_r($limite); echo '</pre>';
+          echo '<pre>'; print_r($pass2); echo '</pre>';
+         echo '<pre>'; print_r($pass1); echo '</pre>';
+       
          
-        if($response[0]->password == $data["password"]){
+        if($pass1== $pass2){
             
            $return = new PostController();
            $return -> fncResponse($response, 'postLogin', null);
