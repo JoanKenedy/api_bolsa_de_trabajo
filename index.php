@@ -16,5 +16,7 @@ require_once  "models/put.model.php";
 require_once "controllers/delete.controller.php";
 require_once  "models/delete.model.php";
 
+require_once  "vendor/autoload.php";
+
 $index = new RoutesController();
 $index->index();

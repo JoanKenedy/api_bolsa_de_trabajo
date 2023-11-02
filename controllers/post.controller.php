@@ -1,4 +1,7 @@
 <?php
+
+use Firebase\JWT\JWT;
+
 class PostController
 {
 
@@ -13,51 +16,74 @@ class PostController
 
         $response = PostModel::postData($table, $data);
         $return = new PostController();
-        $return-> fncResponse($response, "postData", null);
+        $return->fncResponse($response, "postData", null);
     }
     /* Peticion POST para registrar usuario */
 
-    public function postRegister($table, $data){
-      if(isset($data["password"]) && $data["password"] != null){
-       $crypt = crypt($data["password"], '$2a$07$azybxcags23425sdg23sdfhsd$');
-        $data["password"] = $crypt;
+    public function postRegister($table, $data)
+    {
+        if (isset($data["password"]) && $data["password"] != null) {
+            $crypt = crypt($data["password"], '$2a$07$azybxcags23425sdg23sdfhsd$');
+            $data["password"] = $crypt;
 
-         $response = PostModel::postData($table, $data);
-        $return = new PostController();
-        $return-> fncResponse($response, "postData", null);
-      }
+            $response = PostModel::postData($table, $data);
+            $return = new PostController();
+            $return->fncResponse($response, "postData", null);
+        }
     }
 
     /* Login para ingresar como usuario*/
-    public function postLogin($table, $data){
-       $response = GetModel::getFilterData($table, "email", $data["email"], null, null, null, null);
-       
-       if(!empty($response)){
-          $crypt = crypt($data["password"], '$2a$07$azybxcags23425sdg23sdfhsd$'); 
-          $pass1 = $response[0]->password;
-          $limite = strlen($pass1);
-          $pass2 = substr($crypt,0,$limite);
+    public function postLogin($table, $data)
+    {
+        $response = GetModel::getFilterData($table, "email", $data["email"], null, null, null, null);
 
-          echo '<pre>'; print_r($limite); echo '</pre>';
-          echo '<pre>'; print_r($pass2); echo '</pre>';
-         echo '<pre>'; print_r($pass1); echo '</pre>';
-       
-         
-        if($pass1== $pass2){
-            
-           $return = new PostController();
-           $return -> fncResponse($response, 'postLogin', null);
-        }else{
-           $response = null;
-          $return = new PostController();
-          $return -> fncResponse($response, "postLogin", "Wrong password");
+        if (!empty($response)) {
+            $crypt = crypt($data["password"], '$2a$07$azybxcags23425sdg23sdfhsd$');
+            $pass1 = $response[0]->password;
+            $limite = strlen($pass1);
+            $pass2 = substr($crypt, 0, $limite);
+
+
+
+            if ($pass1 == $pass2) {
+
+                $time = time();
+                $key = "e45emM1213rhnqz92NnVvz";
+
+                $token = array(
+                    "iat" => $time,
+                    "exp" => $time * (60 * 60 * 24),
+                    "data" => [
+                        "id" => $response[0]->id_usuario,
+                        "email" => $response[0]->email
+
+                    ]
+                );
+
+                $jwt = JWT::encode($token, $key, "HS256");
+
+                $data = array(
+                    'token_user' => $jwt
+                );
+
+                $update = PutModel::putData($table, $data, $response[0]->id_usuario, "id_usuario");
+
+                if ($update == "The process was successful") {
+                    $response[0]->token_user = $jwt;
+
+                    $return = new PostController();
+                    $return->fncResponse($response, 'postLogin', null);
+                }
+            } else {
+                $response = null;
+                $return = new PostController();
+                $return->fncResponse($response, "postLogin", "Wrong password");
+            }
+        } else {
+            $response = null;
+            $return = new PostController();
+            $return->fncResponse($response, "postLogin", "Wrong email");
         }
-            
-       }else{
-          $response = null;
-          $return = new PostController();
-          $return -> fncResponse($response, "postLogin", "Wrong email");
-       }
     }
 
 
@@ -67,28 +93,27 @@ class PostController
     {
         if (!empty($response)) {
 
-           /* if(isset($response[0]->password)){
+            if (isset($response[0]->password)) {
                 unset($response[0]->password);
-            } */
+            }
             $json = array(
                 'status' => 200,
                 'result' => $response
             );
         } else {
 
-            if($error != null){
+            if ($error != null) {
                 $json = array(
-                'status' => 400,
-                'result' => $error
-            );
-            }else{
+                    'status' => 400,
+                    'result' => $error
+                );
+            } else {
                 $json = array(
-                'status' => 404,
-                'result' => "Not found",
-                'method'  => $method
-            );
+                    'status' => 404,
+                    'result' => "Not found",
+                    'method'  => $method
+                );
             }
-          
         }
         echo json_encode($json, http_response_code($json['status']));
         return;
