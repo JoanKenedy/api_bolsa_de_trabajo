@@ -17,12 +17,12 @@ class DeleteController
         if (!empty($response)) {
             $json = array(
                 'status' => 200,
-                'result' => $response
+                'results' => $response
             );
         } else {
             $json = array(
                 'status' => 404,
-                'result' => "Not found",
+                'results' => "Not found",
                 'method'  => $method
             );
         }

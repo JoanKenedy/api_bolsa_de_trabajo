@@ -52,7 +52,7 @@ class PostController
 
                 $token = array(
                     "iat" => $time,
-                    "exp" => $time * (60 * 60 * 24),
+                    "exp" => $time + (60 * 60 * 24),
                     "data" => [
                         "id" => $response[0]->id_usuario,
                         "email" => $response[0]->email
@@ -63,13 +63,15 @@ class PostController
                 $jwt = JWT::encode($token, $key, "HS256");
 
                 $data = array(
-                    'token_user' => $jwt
+                    'token_user' => $jwt,
+                    "token_exp_user" => $token["exp"]
                 );
 
                 $update = PutModel::putData($table, $data, $response[0]->id_usuario, "id_usuario");
 
                 if ($update == "The process was successful") {
                     $response[0]->token_user = $jwt;
+
 
                     $return = new PostController();
                     $return->fncResponse($response, 'postLogin', null);
@@ -98,19 +100,19 @@ class PostController
             }
             $json = array(
                 'status' => 200,
-                'result' => $response
+                'results' => $response
             );
         } else {
 
             if ($error != null) {
                 $json = array(
                     'status' => 400,
-                    'result' => $error
+                    'results' => $error
                 );
             } else {
                 $json = array(
                     'status' => 404,
-                    'result' => "Not found",
+                    'results' => "Not found",
                     'method'  => $method
                 );
             }

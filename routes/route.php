@@ -1,12 +1,14 @@
 <?php
 
+
+
 $routesArray = explode("/", $_SERVER['REQUEST_URI']);
 $routesArray = array_filter($routesArray);
 /*Con esto traigo mi url $routesArray = $_SERVER['HTTP_HOST'];*/
 if (count($routesArray) == 0) {
   $json = array(
     'status' => 404,
-    "result" => "Not found"
+    "results" => "Not found"
   );
 
   echo json_encode($json, http_response_code($json["status"]));
@@ -192,9 +194,21 @@ if (count($routesArray) == 0) {
 
           $user = GetModel::getFilterData("usuarios", "token_user", $_GET["token"], null, null, null, null);
           if (!empty($user)) {
-            /* Solicitamos respuesta del controlador pra crear datos en cualquier tabla */
-            $response = new PostController();
-            $response->postData(explode("?", $routesArray[1])[0], $_POST);
+
+            $time = time();
+            if ($user[0]->token_exp_user > $time) {
+              /* Solicitamos respuesta del controlador pra crear datos en cualquier tabla */
+              $response = new PostController();
+              $response->postData(explode("?", $routesArray[1])[0], $_POST);
+            } else {
+              $json = array(
+                'status' => 400,
+                'results' => "Error: The token has expired",
+              );
+
+              echo json_encode($json, http_response_code($json['status']));
+              return;
+            }
           } else {
             $json = array(
               'status' => 400,
@@ -280,9 +294,21 @@ if (count($routesArray) == 0) {
 
             $user = GetModel::getFilterData("usuarios", "token_user", $_GET["token"], null, null, null, null);
             if (!empty($user)) {
-              /* Solicitamos respuesta del controlador pra crear datos en cualquier tabla */
-              $response = new PutController();
-              $response->putData(explode("?", $routesArray[1])[0], $data, $_GET["id"], $_GET["nameId"]);
+
+              $time = time();
+              if ($user[0]->token_exp_user > $time) {
+                /* Solicitamos respuesta del controlador pra crear datos en cualquier tabla */
+                $response = new PutController();
+                $response->putData(explode("?", $routesArray[1])[0], $data, $_GET["id"], $_GET["nameId"]);
+              } else {
+                $json = array(
+                  'status' => 400,
+                  'results' => "Error: The token has expired",
+                );
+
+                echo json_encode($json, http_response_code($json['status']));
+                return;
+              }
             } else {
               $json = array(
                 'status' => 400,
@@ -304,7 +330,7 @@ if (count($routesArray) == 0) {
         } else {
           $json = array(
             'status' => 400,
-            'result' => "Los campos no coinciden con los de la base de datos"
+            'results' => "Los campos no coinciden con los de la base de datos"
           );
 
           echo json_encode($json, http_response_code($json['status']));
@@ -314,7 +340,7 @@ if (count($routesArray) == 0) {
 
         $json = array(
           'status' => 400,
-          'result' => "El id no se encontro en la base de datos"
+          'results' => "El id no se encontro en la base de datos"
         );
 
         echo json_encode($json, http_response_code($json['status']));
@@ -352,9 +378,21 @@ if (count($routesArray) == 0) {
 
           $user = GetModel::getFilterData("usuarios", "token_user", $_GET["token"], null, null, null, null);
           if (!empty($user)) {
-            /* Solicitamos respuesta del controlador pra crear datos en cualquier tabla */
-            $response = new DeleteController();
-            $response->deleteData(explode("?", $routesArray[1])[0], $_GET["id"], $_GET["nameId"]);
+
+            $time = time();
+            if ($user[0]->token_exp_user > $time) {
+              /* Solicitamos respuesta del controlador pra crear datos en cualquier tabla */
+              $response = new DeleteController();
+              $response->deleteData(explode("?", $routesArray[1])[0], $_GET["id"], $_GET["nameId"]);
+            } else {
+              $json = array(
+                'status' => 400,
+                'results' => "Error: The token has expired",
+              );
+
+              echo json_encode($json, http_response_code($json['status']));
+              return;
+            }
           } else {
             $json = array(
               'status' => 400,
@@ -376,7 +414,7 @@ if (count($routesArray) == 0) {
       } else {
         $json = array(
           'status' => 400,
-          'result' => "El id no se encontro en la base de datos"
+          'results' => "El id no se encontro en la base de datos"
         );
 
         echo json_encode($json, http_response_code($json['status']));
