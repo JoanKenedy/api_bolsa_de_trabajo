@@ -35,7 +35,7 @@ class PostController
     /* Login para ingresar como usuario*/
     public function postLogin($table, $data)
     {
-        $response = GetModel::getFilterData($table, "email", $data["email"], null, null, null, null);
+        $response = GetModel::getFilterData($table, "email", $data["email"], null, null, null, null, "*");
 
         if (!empty($response)) {
             $crypt = crypt($data["password"], '$2a$07$azybxcags23425sdg23sdfhsd$');
@@ -97,11 +97,12 @@ class PostController
 
             if (isset($response[0]->password)) {
                 unset($response[0]->password);
-            }
-            $json = array(
+                  $json = array(
                 'status' => 200,
                 'results' => $response
             );
+            }
+          
         } else {
 
             if ($error != null) {
