@@ -1,8 +1,12 @@
 <?php
 
+
+
 use Firebase\JWT\JWT;
 
 class PostController
+
+
 {
 
     static public function getColumnsData($table, $database)
@@ -67,7 +71,7 @@ class PostController
                     "token_exp_user" => $token["exp"]
                 );
 
-                $update = PutModel::putData($table, $data, $response[0]->id_usuario, "id_usuario");
+                $update = Putmodel::putData($table, $data, $response[0]->id_usuario, "id_usuario");
 
                 if ($update == "The process was successful") {
                     $response[0]->token_user = $jwt;
@@ -97,12 +101,15 @@ class PostController
 
             if (isset($response[0]->password)) {
                 unset($response[0]->password);
-                  $json = array(
+                $json = array(
+                    'status' => 200,
+                    'results' => $response
+                );
+            }
+            $json = array(
                 'status' => 200,
                 'results' => $response
             );
-            }
-          
         } else {
 
             if ($error != null) {
