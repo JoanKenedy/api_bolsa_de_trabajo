@@ -8,7 +8,7 @@ class GetModel
 {
    /* Peticiones sin filtro */
 
-   static public function getData($table, $orderBy, $orderMode, $startAt, $endAt)
+   static public function getData($table, $orderBy, $orderMode, $startAt, $endAt )
    {
 
       if ($orderBy != null && $orderMode != null && $startAt == null && $endAt == null) {
@@ -26,7 +26,7 @@ class GetModel
 
    /* Peticiones con filtro */
 
-   static public function getFilterData($table, $linkTo, $equalTo, $orderBy, $orderMode, $startAt, $endAt)
+   static public function getFilterData($table, $linkTo, $equalTo, $orderBy, $orderMode, $startAt, $endAt )
    {
 
       if (!$orderBy == null && !$orderMode == null && $startAt == null && $endAt == null) {
@@ -108,7 +108,7 @@ class GetModel
 
    /*Peticiones GET tablas relacionadas con filtro */
 
-   static public function getRelFilterData($rel, $type, $linkTo, $equalTo, $orderBy, $orderMode, $startAt, $endAt)
+   static public function getRelFilterData($rel, $type, $linkTo, $equalTo, $orderBy, $orderMode, $startAt, $endAt )
    {
       $relArray = explode(",", $rel);
       $typeArray = explode(",", $type);

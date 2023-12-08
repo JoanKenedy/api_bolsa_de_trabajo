@@ -1,7 +1,4 @@
 <?php
-
-
-
 $routesArray = explode("/", $_SERVER['REQUEST_URI']);
 $routesArray = array_filter($routesArray);
 /*Con esto traigo mi url $routesArray = $_SERVER['HTTP_HOST'];*/
@@ -47,7 +44,7 @@ if (count($routesArray) == 0) {
         $endAt = null;
       }
       $response = new GetController();
-      $response->getFilterData(explode("?", $routesArray[1])[0], $_GET["linkTo"], $_GET["equalTo"], $orderBy, $orderMode, $startAt, $endAt);
+      $response->getFilterData(explode("?", $routesArray[1])[0], $_GET["linkTo"], $_GET["equalTo"], $orderBy, $orderMode, $startAt, $endAt );
 
 
       /* Peticion GET entre tablas relacionadas sin filtro */
@@ -255,6 +252,7 @@ if (count($routesArray) == 0) {
       $orderMode = null;
       $startAt = null;
       $endAt = null;
+     
 
       $response = PutController::getFilterData($table, $linkTo, $equalTo, $orderBy, $orderMode, $startAt, $endAt);
 
@@ -289,8 +287,43 @@ if (count($routesArray) == 0) {
 
           if (isset($_GET["token"])) {
 
+              if($_GET['token'] == 'no'){
 
-            /* Traemos al usuario de acurdo al token */
+                
+                     if(isset($_GET["except"])){
+                      $num = 0;
+                       foreach ($colums as $key => $value){
+                        $num++;
+                          if($value == $_GET["except"]){
+                              /* Solicitamos respuesta del controlador para editar datos en cualquier tabla */
+                      $response = new PutController();
+                      $response->putData(explode("?", $routesArray[1])[0], $data, $_GET["id"], $_GET["nameId"]);
+                       return;
+                          }
+                       }
+
+                    if($num == count($colums)){
+                          $json = array(
+                  'status' => 400,
+                  'results' => "The execption no existe ",
+                );
+
+                echo json_encode($json, http_response_code($json['status']));
+                return;
+                    }   
+
+                       
+                }else{
+                      $json = array(
+                  'status' => 400,
+                  'results' => "There is no execption",
+                );
+
+                echo json_encode($json, http_response_code($json['status']));
+                return;
+                }
+              }else{
+            /* Traemos al usuario de acuerdo al token */
 
             $user = GetModel::getFilterData("usuarios", "token_user", $_GET["token"], null, null, null, null);
             if (!empty($user)) {
@@ -318,6 +351,7 @@ if (count($routesArray) == 0) {
               echo json_encode($json, http_response_code($json['status']));
               return;
             }
+          }
           } else {
             $json = array(
               'status' => 400,
