@@ -44,7 +44,7 @@ if (count($routesArray) == 0) {
         $endAt = null;
       }
       $response = new GetController();
-      $response->getFilterData(explode("?", $routesArray[1])[0], $_GET["linkTo"], $_GET["equalTo"], $orderBy, $orderMode, $startAt, $endAt );
+      $response->getFilterData(explode("?", $routesArray[1])[0], $_GET["linkTo"], $_GET["equalTo"], $orderBy, $orderMode, $startAt, $endAt);
 
 
       /* Peticion GET entre tablas relacionadas sin filtro */
@@ -252,7 +252,7 @@ if (count($routesArray) == 0) {
       $orderMode = null;
       $startAt = null;
       $endAt = null;
-     
+
 
       $response = PutController::getFilterData($table, $linkTo, $equalTo, $orderBy, $orderMode, $startAt, $endAt);
 
@@ -287,71 +287,69 @@ if (count($routesArray) == 0) {
 
           if (isset($_GET["token"])) {
 
-              if($_GET['token'] == 'no'){
+            if ($_GET['token'] == 'no') {
 
-                
-                     if(isset($_GET["except"])){
-                      $num = 0;
-                       foreach ($colums as $key => $value){
-                        $num++;
-                          if($value == $_GET["except"]){
-                              /* Solicitamos respuesta del controlador para editar datos en cualquier tabla */
-                      $response = new PutController();
-                      $response->putData(explode("?", $routesArray[1])[0], $data, $_GET["id"], $_GET["nameId"]);
-                       return;
-                          }
-                       }
 
-                    if($num == count($colums)){
-                          $json = array(
-                  'status' => 400,
-                  'results' => "The execption no existe ",
-                );
+              if (isset($_GET["except"])) {
+                $num = 0;
+                foreach ($columns as $key => $value) {
+                  $num++;
+                  if ($value == $_GET["except"]) {
+                    /* Solicitamos respuesta del controlador para editar datos en cualquier tabla */
+                    $response = new PutController();
+                    $response->putData(explode("?", $routesArray[1])[0], $data, $_GET["id"], $_GET["nameId"]);
+                    return;
+                  }
+                }
 
-                echo json_encode($json, http_response_code($json['status']));
-                return;
-                    }   
+                if ($num == count($columns)) {
+                  $json = array(
+                    'status' => 400,
+                    'results' => "The execption no existe ",
+                  );
 
-                       
-                }else{
-                      $json = array(
+                  echo json_encode($json, http_response_code($json['status']));
+                  return;
+                }
+              } else {
+                $json = array(
                   'status' => 400,
                   'results' => "There is no execption",
                 );
 
                 echo json_encode($json, http_response_code($json['status']));
                 return;
+              }
+            } else {
+              /* Traemos al usuario de acuerdo al token */
+
+              $user = GetModel::getFilterData("usuarios", "token_user", $_GET["token"], null, null, null, null);
+              if (!empty($user)) {
+
+                $time = time();
+                if ($user[0]->token_exp_user > $time) {
+                  /* Solicitamos respuesta del controlador pra crear datos en cualquier tabla */
+                  $response = new PutController();
+                  $response->putData(explode("?", $routesArray[1])[0], $data, $_GET["id"], $_GET["nameId"]);
+                } else {
+                  $json = array(
+                    'status' => 400,
+                    'results' => "Error: The token has expired",
+                  );
+
+                  echo json_encode($json, http_response_code($json['status']));
+                  return;
                 }
-              }else{
-            /* Traemos al usuario de acuerdo al token */
-
-            $user = GetModel::getFilterData("usuarios", "token_user", $_GET["token"], null, null, null, null);
-            if (!empty($user)) {
-
-              $time = time();
-              if ($user[0]->token_exp_user > $time) {
-                /* Solicitamos respuesta del controlador pra crear datos en cualquier tabla */
-                $response = new PutController();
-                $response->putData(explode("?", $routesArray[1])[0], $data, $_GET["id"], $_GET["nameId"]);
               } else {
                 $json = array(
                   'status' => 400,
-                  'results' => "Error: The token has expired",
+                  'results' => "Error: The user is not authorized",
                 );
 
                 echo json_encode($json, http_response_code($json['status']));
                 return;
               }
-            } else {
-              $json = array(
-                'status' => 400,
-                'results' => "Error: The user is not authorized",
-              );
-
-              echo json_encode($json, http_response_code($json['status']));
-              return;
             }
-          }
           } else {
             $json = array(
               'status' => 400,
