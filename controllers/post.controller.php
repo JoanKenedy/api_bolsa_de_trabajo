@@ -92,20 +92,24 @@ class PostController
         }
     }
 
+    /* Login para ingresar como usuario*/
+    public function postDatosContacto($table, $data)
+    {
+        $response = GetModel::getFilterData($table, "id_usuario_curriculum", $data["id_usuario_curriculum"], null, null, null, null, "*");
+        if (isset($data["id_usuario_curriculum"]) && $data["id_usuario_curriculum"] != null) {
+
+            $response = PostModel::postData($table, $data);
+            $return = new PostController();
+            $return->fncResponse($response, "postData", null);
+        }
+    }
+
 
     /*Respuestas del controlador */
 
     public function fncResponse($response, $method, $error)
     {
         if (!empty($response)) {
-
-            if (isset($response[0]->password)) {
-                unset($response[0]->password);
-                $json = array(
-                    'status' => 200,
-                    'results' => $response
-                );
-            }
             $json = array(
                 'status' => 200,
                 'results' => $response

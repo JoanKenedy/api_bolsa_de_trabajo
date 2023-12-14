@@ -184,10 +184,13 @@ if (count($routesArray) == 0) {
         } else if (isset($_GET["login"]) && $_GET["login"] == true) {
           $response = new PostController();
           $response->postLogin(explode("?", $routesArray[1])[0], $_POST);
+        } else if (isset($_GET["datos_contacto"]) && $_GET["datos_contacto"] == true) {
+          $response = new PostController();
+          $response->postDatosContacto(explode("?", $routesArray[1])[0], $_POST);
         } else if (isset($_GET["token"])) {
 
 
-          /* Traemos al usuario de acurdo al token */
+          /* Traemos al usuario de acuerdo al token */
 
           $user = GetModel::getFilterData("usuarios", "token_user", $_GET["token"], null, null, null, null);
           if (!empty($user)) {
