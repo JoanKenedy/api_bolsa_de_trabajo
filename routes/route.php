@@ -187,6 +187,9 @@ if (count($routesArray) == 0) {
         } else if (isset($_GET["datos_contacto"]) && $_GET["datos_contacto"] == true) {
           $response = new PostController();
           $response->postDatosContacto(explode("?", $routesArray[1])[0], $_POST);
+        } else if (isset($_GET["id_curriculum"]) && $_GET["id_curriculum"] == 'id_curriculum') {
+          $response = new PostController();
+          $response->postDatosProfesion(explode("?", $routesArray[1])[0], $_POST);
         } else if (isset($_GET["token"])) {
 
 

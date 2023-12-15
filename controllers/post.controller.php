@@ -92,7 +92,7 @@ class PostController
         }
     }
 
-    /* Login para ingresar como usuario*/
+    /*Crear los primeros datos del curriculum*/
     public function postDatosContacto($table, $data)
     {
         $response = GetModel::getFilterData($table, "id_usuario_curriculum", $data["id_usuario_curriculum"], null, null, null, null, "*");
@@ -100,7 +100,18 @@ class PostController
 
             $response = PostModel::postData($table, $data);
             $return = new PostController();
-            $return->fncResponse($response, "postData", null);
+            $return->fncResponse($response, "postDataContacto", null);
+        }
+    }
+       /* Login para ingresar como usuario*/
+    public function postDatosProfesion($table, $data)
+    {
+        $response = GetModel::getFilterData($table, "regPuesto", $data["regPuesto"], null, null, null, null, "*");
+        if (isset($data["regPuesto"]) && $data["regPuesto"] != null) {
+
+            $response = PostModel::postData($table, $data);
+            $return = new PostController();
+            $return->fncResponse($response, "postDataProfesion", null);
         }
     }
 
