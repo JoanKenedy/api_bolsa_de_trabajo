@@ -187,12 +187,10 @@ if (count($routesArray) == 0) {
         } else if (isset($_GET["datos_contacto"]) && $_GET["datos_contacto"] == true) {
           $response = new PostController();
           $response->postDatosContacto(explode("?", $routesArray[1])[0], $_POST);
-        } else if (isset($_GET["id_curriculum"]) && $_GET["id_curriculum"] == 'id_curriculum') {
+        } else if (isset($_GET["datos_estudio"]) && $_GET["datos_estudio"] == true) {
           $response = new PostController();
-          $response->postDatosProfesion(explode("?", $routesArray[1])[0], $_POST);
+          $response->postDatosEstudio(explode("?", $routesArray[1])[0], $_POST);
         } else if (isset($_GET["token"])) {
-
-
           /* Traemos al usuario de acuerdo al token */
 
           $user = GetModel::getFilterData("usuarios", "token_user", $_GET["token"], null, null, null, null);

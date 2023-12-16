@@ -100,18 +100,18 @@ class PostController
 
             $response = PostModel::postData($table, $data);
             $return = new PostController();
-            $return->fncResponse($response, "postDataContacto", null);
+            $return->fncResponse($response, "postDatosContacto", null);
         }
     }
-       /* Login para ingresar como usuario*/
-    public function postDatosProfesion($table, $data)
+    /* Login para ingresar como usuario*/
+    public function postDatosEstudio($table, $data)
     {
-        $response = GetModel::getFilterData($table, "regPuesto", $data["regPuesto"], null, null, null, null, "*");
-        if (isset($data["regPuesto"]) && $data["regPuesto"] != null) {
+        $response = GetModel::getFilterData($table, "id_usuario_estudio", $data["id_usuario_estudio"], null, null, null, null, "*");
+        if (isset($data["id_usuario_estudio"]) && $data["id_usuario_estudio"] != null) {
 
             $response = PostModel::postData($table, $data);
             $return = new PostController();
-            $return->fncResponse($response, "postDataProfesion", null);
+            $return->fncResponse($response, "postDatosEstudio", "Error en postDatosEstudio");
         }
     }
 
