@@ -190,6 +190,12 @@ if (count($routesArray) == 0) {
         } else if (isset($_GET["datos_estudio"]) && $_GET["datos_estudio"] == true) {
           $response = new PostController();
           $response->postDatosEstudio(explode("?", $routesArray[1])[0], $_POST);
+        } else if (isset($_GET["datos_empresa"]) && $_GET["datos_empresa"] == true) {
+          $response = new PostController();
+          $response->postDatosEmpresa(explode("?", $routesArray[1])[0], $_POST);
+        } else if (isset($_GET["datos_vacante"]) && $_GET["datos_vacante"] == true) {
+          $response = new PostController();
+          $response->postDatosVacante(explode("?", $routesArray[1])[0], $_POST);
         } else if (isset($_GET["token"])) {
           /* Traemos al usuario de acuerdo al token */
 

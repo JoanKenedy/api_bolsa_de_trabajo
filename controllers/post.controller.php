@@ -114,6 +114,30 @@ class PostController
             $return->fncResponse($response, "postDatosEstudio", "Error en postDatosEstudio");
         }
     }
+    /* Login para ingresar como reclutador*/
+    public function postDatosEmpresa($table, $data)
+    {
+        $response = GetModel::getFilterData($table, "id_usuario_reclutador", $data["id_usuario_reclutador"], null, null, null, null, "*");
+        if (isset($data["id_usuario_reclutador"]) && $data["id_usuario_reclutador"] != null) {
+
+            $response = PostModel::postData($table, $data);
+            $return = new PostController();
+            $return->fncResponse($response, "postDatosEmpresa", "Error en postDatosEstudio");
+        }
+    }
+
+    /* Login para ingresar como reclutador*/
+    public function postDatosVacante($table, $data)
+    {
+        $response = GetModel::getFilterData($table, "id_usuario_vacante", $data["id_usuario_vacante"], null, null, null, null, "*");
+        if (isset($data["id_usuario_vacante"]) && $data["id_usuario_vacante"] != null) {
+
+            $response = PostModel::postData($table, $data);
+            $return = new PostController();
+            $return->fncResponse($response, "postDatosVacante", "Error en postDatosEstudio");
+        }
+    }
+
 
 
     /*Respuestas del controlador */
