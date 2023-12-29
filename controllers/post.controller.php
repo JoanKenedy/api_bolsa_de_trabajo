@@ -134,9 +134,10 @@ class PostController
 
             $response = PostModel::postData($table, $data);
             $return = new PostController();
-            $return->fncResponse($response, "postDatosVacante", "Error en postDatosEstudio");
+            $return->fncResponse($response, "postDatosVacante", "Error en postDatosVacante");
         }
     }
+
 
 
 

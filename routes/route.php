@@ -237,7 +237,7 @@ if (count($routesArray) == 0) {
       } else {
         $json = array(
           'status' => 400,
-          'results' => "error"
+          'results' => "error de todo"
         );
 
         echo json_encode($json, http_response_code($json['status']));
